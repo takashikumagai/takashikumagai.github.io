@@ -44,14 +44,36 @@
 
 <h4><a href="wasm/texture-from-file/index.html">3. Texture from an image file</a></h4>
 <div>
-    Another textured cube demo. This one creates a texture from a .jpg image file.
-    All the preceding demos share the exact same build options, but to read a file, this demo has one added option in build.sh.
+    Another textured cube demo. This one creates a texture from a .jpg image file, loaded with the help of <a href="https://github.com/nothings/stb">the stb library</a>.
+    All the preceding demos share exactly the same build options, but to read a file, this demo has one added option in build.sh.
 	<pre>
          --preload-file files/sky256.jpg
     </pre>
 </div>
 <div>
     <a href="https://github.com/takashikumagai/wasm-opengl-texture-from-file">Source code</a>
+</div>
+
+<!--
+<h4><a href="wasm/shading-and-texturing/index.html">4. Keyboard input</a></h4>
+<div>
+    This time we'll switch gears from rendering - this demo shows how to setup keyboard event listeners and
+    process keyboard inputs using Emscripten's keyboard APIs.
+</div>
+<div>
+    <a href="https://github.com/takashikumagai/wasm-opengl-keyboard-input">Source code</a>
+</div>
+-->
+
+<h4><a href="wasm/load-wavefront-obj-file/index.html">4. Loading a Wavefront .obj file</a></h4>
+<div>
+    I figured it is time to load and render .obj files, so I picked up <a href="https://en.wikipedia.org/wiki/Stanford_bunny">Stanford Bunny</a>, from <a href="https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj">this site</a>.
+    This demo renders .obj model using the same minimalistic shading in demo 1 above.
+    The demo also shows a simple way to calculate normals; since the bunny did not come with vertex normals,
+    I calculated them from its vertex and polygon data.
+</div>
+<div>
+    <a href="https://github.com/takashikumagai/wasm-opengl-load-wavefront-obj-file">Source code</a>
 </div>
 
 </body>
