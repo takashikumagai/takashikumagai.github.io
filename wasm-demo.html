@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Nyanko's static website hosted with GitHub Pages</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <!--script src="main.js"></script-->
+</head>
+<body>
+<h3>WebAssembly Demo</h3>
+<p class="desc">
+<i>June, 2018 - Trying to learn WebAssembly (C++ &amp; Emscripten)</i>
+</p>
+
+<h4><a href="wasm/minimal-rendering-without-shading/index.html">0. Just rendering (no shading)</a></h4>
+<div>
+    Renders a cube without shading. This is meant to serve as a first step for me to build realtime rendering applications on the browser using WebAssembly;
+    Without any shading the object does not appear 3D.
+    The entire rendering code is written in C++ and compiled with emcc.
+</div>
+<div>
+    <a href="">Source code</a>
+</div>
+
+<h4><a href="wasm/minimal-shading/index.html">1. Shading</a></h4>
+<div>
+    Renders a cube, this time with a simple, minimalist shading.
+</div>
+<div>
+    <a href="https://github.com/takashikumagai/wasm-opengl-minimal-shading">Source code</a>
+</div>
+
+<h4><a href="wasm/shading-and-texturing/index.html">2. Shading + texturing</a></h4>
+<div>
+    Renders a textured cube, with the same minimal shading seen in the previous demo.
+    I suppose this is the baseline for rendering models in games, i.e. textured model with a simple lighting.
+</div>
+<div>
+    <a href="https://github.com/takashikumagai/wasm-opengl-shading-and-texturing">Source code</a>
+</div>
+
+<h4><a href="wasm/texture-from-file/index.html">3. Texture from an image file</a></h4>
+<div>
+    Another textured cube demo. This one creates a texture from a .jpg image file, loaded with the help of <a href="https://github.com/nothings/stb">the stb library</a>.
+    All the preceding demos share exactly the same build options, but to read a file, this demo has one added option in build.sh.
+	<pre>
+         --preload-file files/sky256.jpg
+    </pre>
+</div>
+<div>
+    <a href="https://github.com/takashikumagai/wasm-opengl-texture-from-file">Source code</a>
+</div>
+
+<!--
+<h4><a href="wasm/shading-and-texturing/index.html">4. Keyboard input</a></h4>
+<div>
+    This time we'll switch gears from rendering - this demo shows how to setup keyboard event listeners and
+    process keyboard inputs using Emscripten's keyboard APIs.
+</div>
+<div>
+    <a href="https://github.com/takashikumagai/wasm-opengl-keyboard-input">Source code</a>
+</div>
+-->
+
+<h4><a href="wasm/load-wavefront-obj-file/index.html">4. Loading a Wavefront .obj file</a></h4>
+<div>
+    I figured it is time to load and render .obj files, so I picked up <a href="https://en.wikipedia.org/wiki/Stanford_bunny">Stanford Bunny</a>, from <a href="https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj">this site</a>.
+    This demo renders .obj model using the same minimalistic shading in demo 1 above.
+    The demo also shows a simple way to calculate normals; since the bunny did not come with vertex normals,
+    I calculated them from its vertex and polygon data.
+</div>
+<div>
+    <a href="https://github.com/takashikumagai/wasm-opengl-load-wavefront-obj-file">Source code</a>
+</div>
+
+<!--div>
+    <p>
+        A note on demo. Demo programs have similar file and directory layouts.
+    </p>
+    <ul>
+        <li>Wasm.hpp and Wasm.cpp: mostly the same with all the demos</li>
+        <li>MyApp.hpp and MyApp.cpp: code specific to each demo goes here.</li>
+        <li>build.sh: mostly the same, though demos which read from file have extra options.</li>
+    </ul>
+</div-->
+
+<!-- 
+<h3>HTML Miscellany</h3>
+<h4>Width and Height Properties</h4>
+I have had a hard time wrapping my head around different types of width and height available in HTML/JavaScript.
+So this page was born merely to display some of the frequently used width/height properties.
+ -->
+
+</body>
+</html>

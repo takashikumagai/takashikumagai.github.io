@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIY Smart Door Lock</title>
+    <link rel="stylesheet" href="w3.css">
+    <style>
+        body {
+            background-color: #c0c0c0;
+        }
+    </style>
+</head>
+<body class="w3-light-gray">
+    <header class="w3-container w3-light-gray">
+        <h1>DIY Remote Door Lock (retrofitting)</h1>
+    </header>
+    <article class="w3-container">
+        <!--div class="w3-panel w3-blue-gray w3-card-4"></div-->
+        <div>
+            <h2>Introduction</h2>
+            <h3>Background</h3>
+            <p>
+                <ul>
+                    <li>A wide range of quality smart locks are available on the market (<a href="https://www.pcmag.com/picks/the-best-smart-locks">example</a>)</li>
+                    <li>But what I wanted was a bit different from those in the example above. What I wanted was something simple and affordable. I do not need fancy features like biometric authentication.</li>
+                    <li>However, there is one thing I do not want to give up, and it's that I wanted a smart lock that runs on open-source software but I couldn't find any.</li>
+                    <li>Also there were a few specific requirements that had to be met to suit my needs.</li>
+                    <li>So I started to make my own.</li>
+                </ul>
+            </p>
+    
+            <div class="w3-margin-bottom">
+                <img src="images/door-lock-servo-motor-1.jpg" width="160" alt="">
+                <img src="images/door-lock-servo-motor-2.jpg" width="160" alt="">
+                <img src="images/door-lock-servo-motor-3.jpg" width="160" alt="">
+                <img src="images/door-lock.jpg" width="160" alt="">
+            </div>
+
+            <h3>Design Constraints</h3>
+            Living in an apartment (rent) with a limited budget, I quickly discovered that the lock had to meet the following design constraints.
+            <br>
+            <em>For those who are planning to build/buy something similar, the list here may help them determine whether the information on this page will be helpful.</em>
+            <ol>
+                <li>Can be built from readily and widely available components
+                    <ul>
+                        <li>In other words, replacement parts shall be easy to obtain should something in the unit breaks.</li>
+                    </ul>
+                </li>
+                <li>Does not require any permanent modification to the property
+                    <ul>
+                        <li>For example, there shall be no need to drill a hole to the door, or to do anything irreversible.</li>
+                    </ul>
+                </li>
+                <li>I can use the key to lock/unlock the door just the same way after the door lock system is installed (i.e. retrofitted)
+                    <ul>
+                        <li>If the smart door lock stops functioning for whatever reason, I must be able to lock/unlock the door using the door key I have.</li>
+                    </ul>
+                </li>
+                <li>Relatively low cost
+                    <ul>
+                        <li>The total cost should be under 100 USD</li>
+                        <li>If there is a subscription/maintenance fee, it should be roughly under 25 USD per year</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <h3>Current Status</h3>
+        <p>
+            For the moment (Feb. 2022), the unit is essentially a "remote" door lock, i.e. I can remotely lock/unlock the door using my phone. The plan is to start adding "smart" features as I continue evaluating the reliability through daily use.
+        </p>    
+
+        <!--div class="w3-panel w3-blue-gray w3-card-4"></div-->
+        <hr>
+        <div>
+            <h2>System Overview</h2>
+            <img src="images/diy-remote-door-lock.png" width="960" alt="">
+            <h3>Components</h3>
+            <ol>
+                <li>A Raspberry Pi
+                    <ul>
+                        <li>Model: Pi 3 Model B (other models of Pi will definitely work, e.g. Pi Zero W)</li>
+                    </ul>
+                </li>
+                <li>A servo motor
+                    <ul>
+                        <li>Use: for turning the thumb turn on the door. Mechanically, that's all this DIY door lock does at its most basic level.</li>
+                        <li>Model: TowerPro SG92R (any servo with similar specs will work)</li>
+                    </ul>
+                </li>
+                <li>A relay hat
+                    <ul>
+                        <li>Use: for switching on/off the power supply to the servo motor.</li>
+                        <li>Model: Electronics-Salon RPi Power Relay Board Expansion Module (any similar relay will work)</li>
+                    </ul>
+                </li>
+            </ol>
+    
+            <h3>Currently implemented features</h3>
+            <ul>
+                <li>Lock/unlock the door from a smartphone over the internet</li>
+            </ul>
+    
+            <h3>Features under consideration</h3>
+            <ul>
+                <li>Lock/unlock the door with a PIN</li>
+            </ul>
+    
+            <h2>Building the unit & how it works</h2>
+            <h4>1. Set up an internet facing proxy server</h4>
+            <ul>
+                <li>As my ISP implements CG-NAT, there is no way to directly access the Raspbrry Pi in my room over the internet.</li>
+                <li>So I span up a small instance on a cloud service provider (smallest & the most affordable instance in any cloud service should be sufficient for this task), and set up a reverse proxy on it. This instance is set up to be internet-facing so I can access it from my phone when I'm away from home. I'll simply call it VPS for the rest of this article.</li>
+                <li>The IP address of the VPS is mapped to a domain that I own. This way, I can send http request over HTTPS; this is critical to secure lock/unlock requests. More on this later.</li>
+                <li>All of this means that this DIY lock incurs a "subscription fee" in 2 ways:</li>
+                    <ol>
+                        <li>VPS (approx. $30 / year)</li>
+                        <li>Domain renewal fee (approx. $16 / year)</li>
+                    </ol>
+                    so this cost exceeds the limit that I stated in the constraints section and $46 / year price tag does not feel cheap... Then again, both the VPS and the domain can be used for other purposes.
+            </ul>
+    
+            <h4>2. Set up the Raspberry Pi</h4>
+            <ul>
+                <li>First I set up a raspberry pi with a very standard configuration (Raspberry Pi OS 64-bit with SSH server enabled + pigpio & gpiozero libraries)</li>
+                <li>Then set up an SSH tunnel on the Raspberry Pi to the VPS. This way, the https request that I send from my phone to the VPS can be proxied to the pi.</li>
+                <li>Pi runs a simple web server and receives the http requests proxied from the VPS. It processes the requests to control the lock.</li>
+                <li>Pi controls 2 hardware devices via GPIO pins, a servo motor and a relay hat, to lock and unlock the lock.</li>
+            </ul>
+    
+            <h4>3. Send lock/unlock request over https</h4>
+            <ul>
+                <li>The door is locked/unlocked via an http POST request sent from the user's mobile device (i.e. phone). There are currently 2 ways to send the http request from the phone.
+                    <ul>
+                        <li>A user friendly way (primary): an Android app that I built for this project. The app has a simple UI consisting of 2 buttons: 'Lock' and 'Unlock'. All this app does is basically to send 2 kinds of https POST requests (for locking and unlocking the door) with the tap of the lock/unlock button, respectively. This is a very simple app, so the maintenance cost of this app should remain low for the foreseable future.</li>
+                        <li>A backup (plan B): the curl command from the terminal emulator app on Android (Termux)</li>
+                    </ul>
+                </li>
+                <li>As a simple security measure, key (a string) is set to the request body and sent with the request. Pi verifies the key and if it determines that the key is correct, it performs lock/unlock operation, as described in the next section. Note that this is why https is nonnegotiable, which makes keeping the domain and paying for the renwals nonnegotiable as well.</li>
+            </ul>
+    
+            <h4>4. Lock/unlock flow</h4>
+            <ol>
+                <li>The user sends an https request to the VPS.</li>
+                <li>The request is proxied to the Raspberry Pi in my room.</li>
+                <li>The web server on the pi
+                    <ol>
+                        <li>Switches on the relay (power is supplied to the servo motor).</li>
+                        <li>Turns the servo arm by 90 degrees (this locks/unlocks the key).</li>
+                        <li>Turns the servo arm by 90 degrees in the opposite direction.</li>
+                        <li>Switches off the relay (stops the supply of power to the servo motor).</li>
+                    </ol>
+                </li>
+            </ol>
+            This concludes the basic "how it works" part of the article. The rest of the article is just my personal notes.
+        </div>
+        <div>
+            <h3>Notes</h3>
+            <h4>Why do I bother switching on/off the relay every time the door is locked/unlocked</h4>
+            <ul>
+                <li>So the problem was this: when the servo motor is connected to the power, it holds the position of the arm with its torque and this would get in the way if I try to lock/unlok the door using my key; the servo I chose is relatively small but it is powerful enough to block the turning of the thumbturn with the key. The easiest way to get around this issue is to ensure that the servo motor is connected to the power only when it's used to turn the thumbturn.</li>
+                <li>To be honest, I know very little about servo motor and I'm sure that there is a better way, but this was the best I came up with.</li>
+                <li>But being able to lock/unlock using the physical key, should the system stops working, is a mandatory feature; in theory, it would not be necessary if this DIY remote door lock works perfectly. But in practice, it will malfunction at some point in some way (it has), and the last thing I want is getting locked out.</li>
+            </ul>
+        </div>
+    </article>
+</body>
+</html>
