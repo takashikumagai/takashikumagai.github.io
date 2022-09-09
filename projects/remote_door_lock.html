@@ -14,7 +14,7 @@
 </head>
 <body class="w3-light-gray">
     <header class="w3-container w3-light-gray">
-        <h1>DIY Remote Door Lock (retrofitting)</h1>
+        <h1>DIY Remote Door Lock</h1>
     </header>
     <article class="w3-container">
         <!--div class="w3-panel w3-blue-gray w3-card-4"></div-->
@@ -39,7 +39,7 @@
             </div>
 
             <h3>Design Constraints</h3>
-            Living in an apartment (rent) with a limited budget, I quickly discovered that the lock had to meet the following design constraints.
+            Living in an apartment (rent) with a limited budget, I realized that the lock had to meet the following design constraints.
             <br>
             <em>For those who are planning to build/buy something similar, the list here may help them determine whether the information on this page will be helpful.</em>
             <ol>
@@ -69,7 +69,12 @@
 
         <h3>Current Status</h3>
         <p>
-            For the moment (Feb. 2022), the unit is essentially a "remote" door lock, i.e. I can remotely lock/unlock the door using my phone. The plan is to start adding "smart" features as I continue evaluating the reliability through daily use.
+            For the moment (May. 2022), the unit is essentially a "remote" door lock.
+            That is, A. I can lock/unlock the door using my phone instead of the physical key,
+            or B. I can do so remotely to let someone in if I have a visitor.
+            So it means I have so far added one extra feature to the original system.
+            <br>
+            The long term plan: start adding "smart" features as I continue evaluating the reliability through daily use.
         </p>    
 
         <!--div class="w3-panel w3-blue-gray w3-card-4"></div-->
@@ -86,18 +91,19 @@
                 </li>
                 <li>A servo motor
                     <ul>
-                        <li>Use: for turning the thumb turn on the door. Mechanically, that's all this DIY door lock does at its most basic level.</li>
-                        <li>Model: TowerPro SG92R (any servo with similar specs will work)</li>
+                        <li>Use: for turning the thumb turn on the door. In terms of the lock/unlock operation, that is all this DIY door lock does at its most basic level.</li>
+                        <li>Model: TowerPro SG92R (any servo with similar specs should work)</li>
                     </ul>
                 </li>
                 <li>A relay hat
                     <ul>
                         <li>Use: for switching on/off the power supply to the servo motor.</li>
-                        <li>Model: Electronics-Salon RPi Power Relay Board Expansion Module (any similar relay will work)</li>
+                        <li>Model: Electronics-Salon RPi Power Relay Board Expansion Module (any similar relay should work)</li>
                     </ul>
                 </li>
             </ol>
     
+            <!--
             <h3>Currently implemented features</h3>
             <ul>
                 <li>Lock/unlock the door from a smartphone over the internet</li>
@@ -107,14 +113,25 @@
             <ul>
                 <li>Lock/unlock the door with a PIN</li>
             </ul>
-    
-            <h2>Building the unit & how it works</h2>
+            -->
+
+            <h2>Building and assembling the unit</h2>
+            This part is not terribly technical or interesting, so I'll be brief.
+            Bottom line: depending on the material of the door, the shape of the thumbturn, etc.,
+            retrofitting a unit like this might impossible in the first place.
+            In my paritcular case, the wall(?) of the cylindrical base of the thumbturn was <strong>perpendicular</strong> to the door, and this made retrofitting possible.
+            If that part was tapered (i.e. shaped like a circular truncated cone), this whole project would not have happened.
+            That is all I need to say.
+
+            <h2>Setting up hardware and software</h2>
             <h4>1. Set up an internet facing proxy server</h4>
             <ul>
                 <li>As my ISP implements CG-NAT, there is no way to directly access the Raspbrry Pi in my room over the internet.</li>
-                <li>So I span up a small instance on a cloud service provider (smallest & the most affordable instance in any cloud service should be sufficient for this task), and set up a reverse proxy on it. This instance is set up to be internet-facing so I can access it from my phone when I'm away from home. I'll simply call it VPS for the rest of this article.</li>
+                <li>So I span up a small instance on a cloud service provider and set up a reverse proxy on it.
+                    A smallest & the most affordable instance in any cloud service should be sufficient for this task.
+                    This instance is set up to be internet-facing so I can access it from my phone when I'm away from home. I'll simply call it VPS for the rest of this article.</li>
                 <li>The IP address of the VPS is mapped to a domain that I own. This way, I can send http request over HTTPS; this is critical to secure lock/unlock requests. More on this later.</li>
-                <li>All of this means that this DIY lock incurs a "subscription fee" in 2 ways:</li>
+                <li>All of this means that this DIY lock incurs what is effectively a "subscription fee" in 2 ways:</li>
                     <ol>
                         <li>VPS (approx. $30 / year)</li>
                         <li>Domain renewal fee (approx. $16 / year)</li>
@@ -134,8 +151,8 @@
             <ul>
                 <li>The door is locked/unlocked via an http POST request sent from the user's mobile device (i.e. phone). There are currently 2 ways to send the http request from the phone.
                     <ul>
-                        <li>A user friendly way (primary): an Android app that I built for this project. The app has a simple UI consisting of 2 buttons: 'Lock' and 'Unlock'. All this app does is basically to send 2 kinds of https POST requests (for locking and unlocking the door) with the tap of the lock/unlock button, respectively. This is a very simple app, so the maintenance cost of this app should remain low for the foreseable future.</li>
-                        <li>A backup (plan B): the curl command from the terminal emulator app on Android (Termux)</li>
+                        <li><strong>A user friendly way (primary):</strong> an Android app that I built for this project. The app has a simple UI consisting of 2 buttons: 'Lock' and 'Unlock'. All this app does is basically to send 2 kinds of https POST requests (for locking and unlocking the door) with the tap of the lock/unlock button, respectively. This is a very simple app, so the maintenance cost of this app should remain low for the foreseable future.</li>
+                        <li><strong>A backup (plan B):</strong> the curl command from the terminal emulator app on Android (Termux)</li>
                     </ul>
                 </li>
                 <li>As a simple security measure, key (a string) is set to the request body and sent with the request. Pi verifies the key and if it determines that the key is correct, it performs lock/unlock operation, as described in the next section. Note that this is why https is nonnegotiable, which makes keeping the domain and paying for the renwals nonnegotiable as well.</li>
@@ -158,7 +175,7 @@
         </div>
         <div>
             <h3>Notes</h3>
-            <h4>Why do I bother switching on/off the relay every time the door is locked/unlocked</h4>
+            <h4>Why bother switching on/off the relay every time the door is locked/unlocked</h4>
             <ul>
                 <li>So the problem was this: when the servo motor is connected to the power, it holds the position of the arm with its torque and this would get in the way if I try to lock/unlok the door using my key; the servo I chose is relatively small but it is powerful enough to block the turning of the thumbturn with the key. The easiest way to get around this issue is to ensure that the servo motor is connected to the power only when it's used to turn the thumbturn.</li>
                 <li>To be honest, I know very little about servo motor and I'm sure that there is a better way, but this was the best I came up with.</li>
