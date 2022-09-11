@@ -30,7 +30,7 @@
                     <li>So I started to make my own.</li>
                 </ul>
             </p>
-    
+
             <div class="w3-margin-bottom">
                 <img src="images/door-lock-servo-motor-1.jpg" width="160" alt="">
                 <img src="images/door-lock-servo-motor-2.jpg" width="160" alt="">
@@ -67,7 +67,7 @@
             </ol>
         </div>
 
-        <h3>Current Status</h3>
+        <!--h3>Current Status</h3>
         <p>
             For the moment (May. 2022), the unit is essentially a "remote" door lock.
             That is, A. I can lock/unlock the door using my phone instead of the physical key,
@@ -75,7 +75,7 @@
             So it means I have so far added one extra feature to the original system.
             <br>
             The long term plan: start adding "smart" features as I continue evaluating the reliability through daily use.
-        </p>    
+        </p-->
 
         <!--div class="w3-panel w3-blue-gray w3-card-4"></div-->
         <hr>
@@ -102,13 +102,13 @@
                     </ul>
                 </li>
             </ol>
-    
+
             <!--
             <h3>Currently implemented features</h3>
             <ul>
                 <li>Lock/unlock the door from a smartphone over the internet</li>
             </ul>
-    
+
             <h3>Features under consideration</h3>
             <ul>
                 <li>Lock/unlock the door with a PIN</li>
@@ -138,7 +138,7 @@
                     </ol>
                     so this cost exceeds the limit that I stated in the constraints section and $46 / year price tag does not feel cheap... Then again, both the VPS and the domain can be used for other purposes.
             </ul>
-    
+
             <h4>2. Set up the Raspberry Pi</h4>
             <ul>
                 <li>First I set up a raspberry pi with a very standard configuration (Raspberry Pi OS 64-bit with SSH server enabled + pigpio & gpiozero libraries)</li>
@@ -146,7 +146,7 @@
                 <li>Pi runs a simple web server and receives the http requests proxied from the VPS. It processes the requests to control the lock.</li>
                 <li>Pi controls 2 hardware devices via GPIO pins, a servo motor and a relay hat, to lock and unlock the lock.</li>
             </ul>
-    
+
             <h4>3. Send lock/unlock request over https</h4>
             <ul>
                 <li>The door is locked/unlocked via an http POST request sent from the user's mobile device (i.e. phone). There are currently 2 ways to send the http request from the phone.
@@ -157,7 +157,7 @@
                 </li>
                 <li>As a simple security measure, key (a string) is set to the request body and sent with the request. Pi verifies the key and if it determines that the key is correct, it performs lock/unlock operation, as described in the next section. Note that this is why https is nonnegotiable, which makes keeping the domain and paying for the renwals nonnegotiable as well.</li>
             </ul>
-    
+
             <h4>4. Lock/unlock flow</h4>
             <ol>
                 <li>The user sends an https request to the VPS.</li>
@@ -181,6 +181,20 @@
                 <li>To be honest, I know very little about servo motor and I'm sure that there is a better way, but this was the best I came up with.</li>
                 <li>But being able to lock/unlock using the physical key, should the system stops working, is a mandatory feature; in theory, it would not be necessary if this DIY remote door lock works perfectly. But in practice, it will malfunction at some point in some way (it has), and the last thing I want is getting locked out.</li>
             </ul>
+            <h3>Updates</h3>
+            <h4>July 2022 - replacing the servo motor</h4>
+            <p>
+                After a couple of months of use, the servo motor started failing; it stopped turning in one continuous motion. Instead, it wiggles and falters halfway through its 90-degree turning motion.
+            </p>
+            <p>
+                First I tested the servo motor without the load (i.e. no pushing of the thumb turn), but I got the same result. Then I tested it with another pi I have without the load; again, the same problem persisted. So I concluded that the servo motor did indeed break.
+            </p>
+            <p>
+                I bought the exact same model of servo motor and replaced the old one. Then everything was back to normal.
+            </p>
+            <p>
+                I'd estimate that the servo went through a couple hundred to several hundred times of 90-degree turns before starting to suffer the aforementioned problem, which does not sound impressive even for a cheap commodity servo motor. Was it just a bad luck or was the load too heavy? I do not know. But as I replaced it with the exact same model, I'll keep an eye on it and I'll see what will happen after roughly the same amount of time passes.
+            </p>
         </div>
     </article>
 </body>
