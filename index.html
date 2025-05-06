@@ -1,23 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Nyanko's static website hosted with GitHub Pages</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="w3.css" />
-    <!--script src="main.js"></script-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Takashi Kumagai</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="theme.js"></script>
 </head>
-<body class="w3-light-gray">
-    <div class="w3-container">
-        <h2>Projects</h2>
-        <div>
-            <a href="projects/remote_door_lock.html">DIY Remote Door Lock</a>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300">
+    <!-- Navigation Bar -->
+    <nav class="bg-white dark:bg-gray-800 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="font-bold text-xl text-primary-light dark:text-primary-dark">TK</span>
+                    </div>
+                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        <a href="#" class="border-b-2 border-primary-light dark:border-primary-dark text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            Home
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center">
+                        <label for="theme-selector" class="mr-2 text-sm">Theme:</label>
+                        <select id="theme-selector" onchange="updateTheme(this.value)"
+                            class="form-select rounded-md p-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 focus:border-primary-light dark:focus:border-primary-dark focus:ring focus:ring-primary-light dark:focus:ring-primary-dark focus:ring-opacity-50">
+                            <option value="system">System</option>
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
-        <h2>Coding</h2>
-        <div>
-            <a href="wasm-demo.html">WebAssembly Demo</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-8">
+            <h1 class="text-3xl font-bold mb-6 text-primary-light dark:text-primary-dark">Takashi Kumagai</h1>
+            <p class="text-lg mb-4">Welcome to my portfolio site. Here you'll find my projects and coding experiments.</p>
         </div>
-    </div>
+
+        <!-- Projects Section -->
+        <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a href="projects/remote_door_lock.html" class="block p-4 rounded-md border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <h3 class="text-lg font-medium text-primary-light dark:text-primary-dark">DIY Remote Door Lock</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">A smart door lock system built using Raspberry Pi and servo motors.</p>
+                </a>
+                <!-- Add more project cards as needed -->
+            </div>
+        </div>
+
+        <!-- Coding Section -->
+        <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">Coding</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a href="wasm-demo.html" class="block p-4 rounded-md border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <h3 class="text-lg font-medium text-primary-light dark:text-primary-dark">WebAssembly Demo</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">Experiments with WebAssembly technology.</p>
+                </a>
+                <!-- Add more coding project cards as needed -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 mt-12 py-6 shadow-inner">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-gray-500 dark:text-gray-400">&copy; 2025 Takashi Kumagai. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
